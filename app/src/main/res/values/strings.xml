@@ -10,5 +10,9 @@
     <string name="qu_c">C is a</string>
     <string name="qu_d">D is d</string>
     <string name="qu_e">E is e</string>
+    <string name="cheat_button">Cheat!</string>
+    <string name="warning_text">Are you sure want to do this?</string>
+    <string name="show_answer_button">Show Answer</string>
+    <string name="judgment_toast">Cheating is wrong.</string>
 
 </resources>
