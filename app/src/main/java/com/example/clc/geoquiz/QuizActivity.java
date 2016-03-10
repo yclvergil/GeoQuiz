@@ -3,6 +3,7 @@ package com.example.clc.geoquiz;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,7 +11,7 @@ import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String KEY_INDEX = "index";
-    private static final String SPIN_CHEAT = "quiz_is_cheat";
+    private static final String QU_CHEAT = "quiz_is_cheat";
 
     private Button mTrueButton;
     private Button mFalseButton;
@@ -36,14 +37,14 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         mTrueButton = (Button) findViewById(R.id.true_button);
         mFalseButton = (Button) findViewById(R.id.false_button);
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-
+        //取出题序
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
-            if (savedInstanceState.getBoolean(SPIN_CHEAT, false)) {
-                mIsCheater = savedInstanceState.getBoolean(SPIN_CHEAT);
-            }
         }
+        //更新问题
         updateQuestion();
+        //判断是否作弊
+        mIsCheater = savedInstanceState != null && savedInstanceState.getBoolean(QU_CHEAT, false);
         mNextButton = (Button) findViewById(R.id.next_button);
         mCheatButton = (Button) findViewById(R.id.cheat_button);
         //点击
@@ -79,7 +80,9 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_INDEX, mCurrentIndex);
-        outState.putBoolean(SPIN_CHEAT, mIsCheater);
+        if (mIsCheater) {
+            outState.putBoolean(QU_CHEAT, true);
+        }
     }
 
     //更新问题
@@ -91,6 +94,9 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
 
     //核实问题
     private void checkAnswer(boolean userPressedTrue) {
+        if (mQuestionBank[mCurrentIndex].isCheat()) {
+            mIsCheater = true;
+        }
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
         int messageResId = 0;
         if (mIsCheater) {
@@ -113,5 +119,6 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+        mQuestionBank[mCurrentIndex].setCheat(mIsCheater);
     }
 }

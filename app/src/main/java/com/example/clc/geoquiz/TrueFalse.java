@@ -6,6 +6,15 @@ package com.example.clc.geoquiz;
 public class TrueFalse {
     private int mQuestion;
     private boolean mTrueQuestion;
+    private boolean mCheat;
+
+    public boolean isCheat() {
+        return mCheat;
+    }
+
+    public void setCheat(boolean cheat) {
+        mCheat = cheat;
+    }
 
     public TrueFalse(int question, boolean trueQuestion) {
         mQuestion = question;
